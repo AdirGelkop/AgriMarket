@@ -14,6 +14,47 @@ AgriMarket enables farmers to sell their crops directly to retailers using block
 
 ## 🏗️ Architecture
 
+```mermaid
+graph TB
+    subgraph "AgriMarket Platform"
+        AM[AgriMarket.sol<br/>Main Contract]
+        AC[AgriCoin.sol<br/>ERC20 Token]
+        CERT[AgriCertificate.sol<br/>ERC721 NFT]
+    end
+    
+    subgraph "Crop Contracts"
+        TC[TomatoContract.sol<br/>Mar-Sep]
+        CC[CucumberContract.sol<br/>Apr-Aug]
+        OC[OnionContract.sol<br/>Feb-Jul]
+    end
+    
+    subgraph "Users"
+        F[👨‍🌾 Farmer]
+        R[🏪 Retailer]
+    end
+    
+    F --> TC
+    F --> CC
+    F --> OC
+    R --> TC
+    R --> CC
+    R --> OC
+    
+    TC --> AC
+    CC --> AC
+    OC --> AC
+    
+    TC --> CERT
+    CC --> CERT
+    OC --> CERT
+    
+    AM --> AC
+    AM --> CERT
+    AM --> TC
+    AM --> CC
+    AM --> OC
+```
+
 ### Smart Contracts
 - **AgriCoin.sol** - ERC20 token for platform payments
 - **AgriCertificate.sol** - ERC721 NFT certificates for milestones
@@ -39,7 +80,7 @@ Each crop contract has 3 milestones with different payment distributions:
 ## 🛠️ Technology Stack
 
 - **Blockchain**: Ethereum (Sepolia Testnet)
-- **Smart Contracts**: Solidity ^0.8.0
+- **Smart Contracts**: Solidity ^0.8.20
 - **Standards**: ERC20 (tokens), ERC721 (NFTs)
 - **Development**: Hardhat, OpenZeppelin
 - **Frontend**: HTML5, CSS3, JavaScript (Web3.js)
@@ -57,8 +98,21 @@ AgriMarket/
 │   └── AgriMarket.sol
 ├── frontend/           # Web interface
 ├── scripts/            # Deployment scripts
-└── docs/              # Documentation
+│   └── deploy.js
+├── docs/              # Documentation
+├── addresses.json     # Deployed contract addresses
+└── hardhat.config.js  # Hardhat configuration
 ```
+
+## 🚀 Deployed Contracts (Sepolia TestNet)
+
+| Contract | Address | Etherscan |
+|----------|---------|-----------|
+| AgriCoin | `0x98C1D042206d844Ee13b4c41FfA8D59dfd3F85e9` | [View](https://sepolia.etherscan.io/address/0x98C1D042206d844Ee13b4c41FfA8D59dfd3F85e9) |
+| AgriCertificate | `0xDC7F26E092Ea61f82f574d8Dd7a2AcC61D861712` | [View](https://sepolia.etherscan.io/address/0xDC7F26E092Ea61f82f574d8Dd7a2AcC61D861712) |
+| TomatoContract | `0x056b3Da815124AE59C729FF10AA4e5a140A7B942` | [View](https://sepolia.etherscan.io/address/0x056b3Da815124AE59C729FF10AA4e5a140A7B942) |
+| CucumberContract | `0xB84F49B9624350437d6e33EB8ac84A253EEFd8DC` | [View](https://sepolia.etherscan.io/address/0xB84F49B9624350437d6e33EB8ac84A253EEFd8DC) |
+| OnionContract | `0x009b332D1d1FF848e64570b2d8b9533a67a58ce6` | [View](https://sepolia.etherscan.io/address/0x009b332D1d1FF848e64570b2d8b9533a67a58ce6) |
 
 ## 🎯 Project Goals
 
@@ -71,5 +125,5 @@ AgriMarket/
 ## 🚀 Current Status
 
 ✅ Smart contracts developed and tested  
-🔄 Ready for deployment to Sepolia testnet  
-⏳ Frontend development in progress
+✅ Deployed to Sepolia TestNet successfully  
+🔄 Frontend development in progress
