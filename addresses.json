@@ -1,0 +1,11 @@
+{
+  "network": "sepolia",
+  "deployedAt": "2025-07-16T16:55:40.323Z",
+  "contracts": {
+    "AgriCoin": "0x98C1D042206d844Ee13b4c41FfA8D59dfd3F85e9",
+    "AgriCertificate": "0xDC7F26E092Ea61f82f574d8Dd7a2AcC61D861712",
+    "TomatoContract": "0x056b3Da815124AE59C729FF10AA4e5a140A7B942",
+    "CucumberContract": "0xB84F49B9624350437d6e33EB8ac84A253EEFd8DC",
+    "OnionContract": "0x009b332D1d1FF848e64570b2d8b9533a67a58ce6"
+  }
+}
