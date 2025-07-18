@@ -413,3 +413,103 @@ showPage = function(pageName) {
         updateAgriCoinBalance();
     }
 };
+
+// Contract instances
+let contracts = {};
+
+// Initialize contract connections
+async function initializeContracts() {
+    if (!web3 || !currentAccount) {
+        console.log('Web3 or account not available');
+        return false;
+    }
+    
+    try {
+        // Initialize contract instances
+        contracts.AgriCoin = new web3.eth.Contract(CONTRACT_ABIS.AgriCoin, CONTRACT_ADDRESSES.AgriCoin);
+        contracts.TomatoContract = new web3.eth.Contract(CONTRACT_ABIS.TomatoContract, CONTRACT_ADDRESSES.TomatoContract);
+        contracts.CucumberContract = new web3.eth.Contract(CONTRACT_ABIS.CucumberContract, CONTRACT_ADDRESSES.CucumberContract);
+        contracts.OnionContract = new web3.eth.Contract(CONTRACT_ABIS.OnionContract, CONTRACT_ADDRESSES.OnionContract);
+        
+        console.log('Contracts initialized successfully');
+        return true;
+        
+    } catch (error) {
+        console.error('Error initializing contracts:', error);
+        return false;
+    }
+}
+
+// Test contract connectivity
+async function testContractConnections() {
+    if (!currentAccount) {
+        alert('Please connect MetaMask first');
+        return;
+    }
+    
+    try {
+        console.log('Testing contract connections...');
+        
+        // Test AgriCoin balance
+        const agriBalance = await contracts.AgriCoin.methods.balanceOf(currentAccount).call();
+        console.log('AgriCoin balance:', web3.utils.fromWei(agriBalance, 'ether'), 'AGRI');
+        
+        // Update UI with real balance
+        const balanceElement = document.getElementById('retailer-agricoin-balance');
+        if (balanceElement) {
+            balanceElement.textContent = parseFloat(web3.utils.fromWei(agriBalance, 'ether')).toFixed(2);
+        }
+        
+        console.log('Contract connections working!');
+        return true;
+        
+    } catch (error) {
+        console.error('Contract connection test failed:', error);
+        alert('Failed to connect to contracts. Make sure you are on Sepolia network.');
+        return false;
+    }
+}
+
+// Update the existing wallet connection function
+async function updateWalletUI() {
+    if (currentAccount) {
+        // Get ETH balance
+        const balance = await web3.eth.getBalance(currentAccount);
+        const balanceInEth = web3.utils.fromWei(balance, 'ether');
+        
+        // Update UI elements
+        document.getElementById('wallet-address').textContent = 
+            currentAccount.substring(0, 6) + '...' + currentAccount.substring(38);
+        document.getElementById('wallet-balance').textContent = 
+            parseFloat(balanceInEth).toFixed(4);
+        
+        // Show wallet info, hide connect button
+        document.getElementById('connect-wallet').style.display = 'none';
+        document.getElementById('wallet-info').style.display = 'block';
+        
+        // Initialize contracts after wallet connection
+        await initializeContracts();
+        await testContractConnections();
+    }
+}
+
+// Add contract testing button (temporary for debugging)
+function addTestButton() {
+    const testBtn = document.createElement('button');
+    testBtn.textContent = 'Test Contracts';
+    testBtn.style.position = 'fixed';
+    testBtn.style.bottom = '20px';
+    testBtn.style.right = '20px';
+    testBtn.style.zIndex = '1000';
+    testBtn.className = 'wallet-btn';
+    testBtn.onclick = testContractConnections;
+    document.body.appendChild(testBtn);
+}
+
+// Add test button when page loads
+document.addEventListener('DOMContentLoaded', function() {
+    // ... existing code ...
+    
+    // Add test button for debugging
+    addTestButton();
+});

@@ -12,19 +12,24 @@ const CONTRACT_ADDRESSES = {
 const CONTRACT_ABIS = {
     AgriCoin: [
         {
-            "inputs": [{"type": "address", "name": "spender"}, {"type": "uint256", "name": "amount"}],
+            "inputs": [{"name": "spender", "type": "address"}, {"name": "amount", "type": "uint256"}],
             "name": "approve",
+            "outputs": [{"name": "", "type": "bool"}],
+            "stateMutability": "nonpayable",
             "type": "function"
         },
         {
-            "inputs": [{"type": "address", "name": "account"}],
+            "inputs": [{"name": "account", "type": "address"}],
             "name": "balanceOf",
-            "outputs": [{"type": "uint256"}],
+            "outputs": [{"name": "", "type": "uint256"}],
+            "stateMutability": "view",
             "type": "function"
         },
         {
-            "inputs": [{"type": "address", "name": "to"}, {"type": "uint256", "name": "amount"}],
+            "inputs": [{"name": "to", "type": "address"}, {"name": "amount", "type": "uint256"}],
             "name": "transfer",
+            "outputs": [{"name": "", "type": "bool"}],
+            "stateMutability": "nonpayable",
             "type": "function"
         }
     ],
