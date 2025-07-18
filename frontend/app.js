@@ -119,12 +119,17 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 
-// Handle create contract form submission
+// Handle create contract form submission - REAL BLOCKCHAIN VERSION
 async function handleCreateContract(event) {
     event.preventDefault();
     
     if (!currentAccount) {
         alert('Please connect MetaMask first');
+        return;
+    }
+    
+    if (!contracts.TomatoContract) {
+        alert('Contracts not initialized. Please refresh and try again.');
         return;
     }
     
@@ -135,32 +140,60 @@ async function handleCreateContract(event) {
     // Show loading state
     const submitBtn = event.target.querySelector('.submit-btn');
     const originalText = submitBtn.textContent;
-    submitBtn.textContent = 'Creating Contract...';
+    submitBtn.textContent = 'Creating Contract on Blockchain...';
     submitBtn.disabled = true;
     
     try {
-        // Here we'll add blockchain interaction later
-        console.log('Creating contract:', { cropType, quantity, pricePerKg });
+        // Select the right contract based on crop type
+        let contractToUse;
+        switch(cropType) {
+            case 'tomato':
+                contractToUse = contracts.TomatoContract;
+                break;
+            case 'cucumber':
+                contractToUse = contracts.CucumberContract;
+                break;
+            case 'onion':
+                contractToUse = contracts.OnionContract;
+                break;
+            default:
+                throw new Error('Invalid crop type selected');
+        }
         
-        // Simulate contract creation for now
-        setTimeout(() => {
-            alert(`Contract created successfully!\nCrop: ${cropType}\nQuantity: ${quantity}kg\nPrice: ${pricePerKg} AgriCoin/kg`);
-            
-            // Reset form
-            event.target.reset();
-            
-            // Restore button
-            submitBtn.textContent = originalText;
-            submitBtn.disabled = false;
-            
-            // Refresh contracts list
-            loadFarmerContracts();
-        }, 2000);
+        // Convert price to wei (assuming AgriCoin has 18 decimals like ETH)
+        const priceInWei = web3.utils.toWei(pricePerKg, 'ether');
+        
+        console.log('Creating contract:', { cropType, quantity, priceInWei });
+        
+        // Call smart contract function
+        const transaction = await contractToUse.methods.createContract(quantity, priceInWei).send({
+            from: currentAccount,
+            gas: 300000 // Gas limit
+        });
+        
+        console.log('Transaction successful:', transaction.transactionHash);
+        
+        alert(`✅ Contract created successfully!\n\nCrop: ${cropType}\nQuantity: ${quantity}kg\nPrice: ${pricePerKg} AGRI/kg\n\nTransaction: ${transaction.transactionHash}`);
+        
+        // Reset form
+        event.target.reset();
+        
+        // Refresh contracts list
+        loadFarmerContracts();
         
     } catch (error) {
         console.error('Error creating contract:', error);
-        alert('Failed to create contract');
         
+        let errorMessage = 'Failed to create contract';
+        if (error.message.includes('User denied')) {
+            errorMessage = 'Transaction was cancelled by user';
+        } else if (error.message.includes('gas')) {
+            errorMessage = 'Transaction failed due to gas issues';
+        }
+        
+        alert('❌ ' + errorMessage);
+        
+    } finally {
         // Restore button
         submitBtn.textContent = originalText;
         submitBtn.disabled = false;
@@ -309,17 +342,50 @@ async function handleMilestoneApproval(event) {
 }
 
 // Handle AgriCoin purchase
+// Handle AgriCoin purchase - REAL BLOCKCHAIN VERSION
 async function handleBuyAgriCoin() {
     if (!currentAccount) {
         alert('Please connect MetaMask first');
         return;
     }
     
-    const amount = prompt('How many AgriCoin do you want to buy?');
-    if (amount && !isNaN(amount) && amount > 0) {
-        console.log('Buying AgriCoin:', amount);
-        alert(`Purchase request sent for ${amount} AgriCoin`);
-        updateAgriCoinBalance();
+    const amount = prompt('How many AgriCoin do you want to buy? (1 ETH = 1000 AGRI)');
+    if (!amount || isNaN(amount) || amount <= 0) {
+        return;
+    }
+    
+    try {
+        // Calculate ETH needed (1 ETH = 1000 AGRI)
+        const ethNeeded = amount / 1000;
+        const ethInWei = web3.utils.toWei(ethNeeded.toString(), 'ether');
+        
+        console.log(`Buying ${amount} AGRI for ${ethNeeded} ETH`);
+        
+        // For demo purposes, we'll simulate buying by transferring ETH to a dummy address
+        // In a real system, there would be a proper exchange contract
+        const transaction = await web3.eth.sendTransaction({
+            from: currentAccount,
+            to: '0x0000000000000000000000000000000000000001', // Dummy address
+            value: ethInWei,
+            gas: 21000
+        });
+        
+        alert(`✅ AgriCoin purchase simulated!\n\nAmount: ${amount} AGRI\nCost: ${ethNeeded} ETH\nTransaction: ${transaction.transactionHash}\n\nNote: This is a demo - no actual tokens transferred.`);
+        
+        // Refresh balance
+        setTimeout(() => {
+            testContractConnections();
+        }, 2000);
+        
+    } catch (error) {
+        console.error('Error buying AgriCoin:', error);
+        
+        let errorMessage = 'Failed to buy AgriCoin';
+        if (error.message.includes('User denied')) {
+            errorMessage = 'Transaction was cancelled by user';
+        }
+        
+        alert('❌ ' + errorMessage);
     }
 }
 
