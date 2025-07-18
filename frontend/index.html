@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AgriMarket - Blockchain Agricultural Platform</title>
     <link rel="stylesheet" href="style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/web3/1.10.0/web3.min.js"></script>
 </head>
 <body>
     <nav class="navbar">
@@ -44,6 +45,16 @@
         <div class="card">
             <h3>Available Contracts</h3>
             <p>Browse farming contracts ready for purchase</p>
+        </div>
+    </div>
+
+    <!-- MetaMask Connection Section -->
+    <div id="wallet-section" class="wallet-section">
+        <button id="connect-wallet" class="wallet-btn">Connect MetaMask</button>
+        <div id="wallet-info" class="wallet-info" style="display: none;">
+            <p>Connected: <span id="wallet-address"></span></p>
+            <p>Balance: <span id="wallet-balance"></span> ETH</p>
+            <button id="disconnect-wallet" class="wallet-btn secondary">Disconnect</button>
         </div>
     </div>
 
