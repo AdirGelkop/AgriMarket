@@ -1,33 +1,52 @@
-<!-- החלף את div עם id="home-page" -->
-<div id="home-page" class="page active">
-    <h1>🌾 Welcome to AgriMarket</h1>
-    <p>The future of agricultural trading on blockchain</p>
-    <div class="card">
-        <h3>🚜 For Farmers</h3>
-        <p>Create smart contracts for your crops and get guaranteed payments</p>
-    </div>
-    <div class="card">
-        <h3>🏪 For Retailers</h3>
-        <p>Browse verified agricultural products and secure your supply chain</p>
-    </div>
-</div>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AgriMarket - Blockchain Agricultural Platform</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-brand">🌾 AgriMarket</div>
+        <ul class="nav-links">
+            <li><a href="#" onclick="showPage('home')">Home</a></li>
+            <li><a href="#" onclick="showPage('farmer')">Farmer</a></li>
+            <li><a href="#" onclick="showPage('retailer')">Retailer</a></li>
+        </ul>
+    </nav>
 
-<!-- החלף את div עם id="farmer-page" -->
-<div id="farmer-page" class="page">
-    <h1>🚜 Farmer Dashboard</h1>
-    <p>Manage your crops and monitor your contracts</p>
-    <div class="card">
-        <h3>My Active Contracts</h3>
-        <p>View and manage your current farming agreements</p>
+    <div id="home-page" class="page active">
+        <h1>🌾 Welcome to AgriMarket</h1>
+        <p>The future of agricultural trading on blockchain</p>
+        <div class="card">
+            <h3>🚜 For Farmers</h3>
+            <p>Create smart contracts for your crops and get guaranteed payments</p>
+        </div>
+        <div class="card">
+            <h3>🏪 For Retailers</h3>
+            <p>Browse verified agricultural products and secure your supply chain</p>
+        </div>
     </div>
-</div>
 
-<!-- החלף את div עם id="retailer-page" -->
-<div id="retailer-page" class="page">
-    <h1>🏪 Retailer Dashboard</h1>
-    <p>Discover and purchase quality agricultural products</p>
-    <div class="card">
-        <h3>Available Contracts</h3>
-        <p>Browse farming contracts ready for purchase</p>
+    <div id="farmer-page" class="page">
+        <h1>🚜 Farmer Dashboard</h1>
+        <p>Manage your crops and monitor your contracts</p>
+        <div class="card">
+            <h3>My Active Contracts</h3>
+            <p>View and manage your current farming agreements</p>
+        </div>
     </div>
-</div>
+
+    <div id="retailer-page" class="page">
+        <h1>🏪 Retailer Dashboard</h1>
+        <p>Discover and purchase quality agricultural products</p>
+        <div class="card">
+            <h3>Available Contracts</h3>
+            <p>Browse farming contracts ready for purchase</p>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
