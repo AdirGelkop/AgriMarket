@@ -100,9 +100,55 @@
     <div id="retailer-page" class="page">
         <h1>🏪 Retailer Dashboard</h1>
         <p>Discover and purchase quality agricultural products</p>
+        
+        <!-- Available Contracts Section -->
         <div class="card">
             <h3>Available Contracts</h3>
-            <p>Browse farming contracts ready for purchase</p>
+            <div id="available-contracts-list">
+                <p>Loading available contracts...</p>
+            </div>
+        </div>
+    
+        <!-- My Purchased Contracts Section -->
+        <div class="card">
+            <h3>My Purchased Contracts</h3>
+            <div id="retailer-contracts-list">
+                <p>Loading your contracts...</p>
+            </div>
+        </div>
+    
+        <!-- Contract Approval Section -->
+        <div class="card">
+            <h3>Approve Milestone</h3>
+            <form id="approve-milestone-form">
+                <div class="form-group">
+                    <label for="approve-contract-id">Contract ID:</label>
+                    <input type="text" id="approve-contract-id" placeholder="Enter contract ID" required>
+                </div>
+                <div class="form-group">
+                    <label for="approve-milestone-stage">Milestone Stage to Approve:</label>
+                    <select id="approve-milestone-stage" required>
+                        <option value="">Select stage</option>
+                        <option value="1">Stage 1 - Planting</option>
+                        <option value="2">Stage 2 - Growing</option>
+                        <option value="3">Stage 3 - Harvest</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="approval-notes">Approval Notes (optional):</label>
+                    <textarea id="approval-notes" placeholder="Add notes about the milestone approval"></textarea>
+                </div>
+                <button type="submit" class="submit-btn">Approve & Pay</button>
+            </form>
+        </div>
+    
+        <!-- AgriCoin Balance Section -->
+        <div class="card">
+            <h3>💰 AgriCoin Balance</h3>
+            <div id="agricoin-balance">
+                <p>Balance: <span id="retailer-agricoin-balance">Loading...</span> AGRI</p>
+                <button id="buy-agricoin-btn" class="submit-btn">Buy AgriCoin</button>
+            </div>
         </div>
     </div>
 

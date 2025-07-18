@@ -276,3 +276,103 @@ p {
     border-color: #28a745;
     background-color: #d4edda;
 }
+
+/* Retailer specific styles */
+.contract-card {
+    background: white;
+    border: 2px solid #ddd;
+    border-radius: 10px;
+    padding: 1.5rem;
+    margin: 1rem 0;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.contract-card:hover {
+    border-color: #2d5a2d;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+
+.contract-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.contract-title {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #2d5a2d;
+}
+
+.contract-price {
+    font-size: 1.1rem;
+    font-weight: bold;
+    color: #e67e22;
+}
+
+.contract-details {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.contract-detail {
+    font-size: 0.9rem;
+}
+
+.contract-detail strong {
+    color: #2d5a2d;
+}
+
+.purchase-btn {
+    background: linear-gradient(135deg, #e67e22 0%, #d35400 100%);
+    color: white;
+    border: none;
+    padding: 8px 20px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: all 0.3s ease;
+}
+
+.purchase-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+}
+
+.milestone-progress {
+    background: #f8f9fa;
+    padding: 0.5rem;
+    border-radius: 5px;
+    margin-top: 1rem;
+}
+
+.progress-bar {
+    background: #e9ecef;
+    height: 10px;
+    border-radius: 5px;
+    overflow: hidden;
+}
+
+.progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #28a745 0%, #20c997 100%);
+    transition: width 0.3s ease;
+}
+
+.agricoin-info {
+    text-align: center;
+    padding: 1rem;
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    border-radius: 10px;
+}
+
+.balance-amount {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #2d5a2d;
+}
