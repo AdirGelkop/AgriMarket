@@ -33,9 +33,67 @@
     <div id="farmer-page" class="page">
         <h1>🚜 Farmer Dashboard</h1>
         <p>Manage your crops and monitor your contracts</p>
+        
+        <!-- Create New Contract Section -->
+        <div class="card">
+            <h3>Create New Contract</h3>
+            <form id="create-contract-form">
+                <div class="form-group">
+                    <label for="crop-type">Crop Type:</label>
+                    <select id="crop-type" required>
+                        <option value="">Select crop</option>
+                        <option value="tomato">🍅 Tomato</option>
+                        <option value="cucumber">🥒 Cucumber</option>
+                        <option value="onion">🧅 Onion</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="quantity">Quantity (kg):</label>
+                    <input type="number" id="quantity" min="1" required>
+                </div>
+                <div class="form-group">
+                    <label for="price-per-kg">Price per kg (AgriCoin):</label>
+                    <input type="number" id="price-per-kg" min="0.01" step="0.01" required>
+                </div>
+                <button type="submit" class="submit-btn">Create Contract</button>
+            </form>
+        </div>
+
+        <!-- My Contracts Section -->
         <div class="card">
             <h3>My Active Contracts</h3>
-            <p>View and manage your current farming agreements</p>
+            <div id="farmer-contracts-list">
+                <p>Loading contracts...</p>
+            </div>
+        </div>
+
+        <!-- Upload Milestone Section -->
+        <div class="card">
+            <h3>Upload Milestone Evidence</h3>
+            <form id="milestone-form">
+                <div class="form-group">
+                    <label for="contract-id">Contract ID:</label>
+                    <input type="text" id="contract-id" placeholder="Enter contract ID" required>
+                </div>
+                <div class="form-group">
+                    <label for="milestone-stage">Milestone Stage:</label>
+                    <select id="milestone-stage" required>
+                        <option value="">Select stage</option>
+                        <option value="1">Stage 1 - Planting</option>
+                        <option value="2">Stage 2 - Growing</option>
+                        <option value="3">Stage 3 - Harvest</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="evidence-description">Description:</label>
+                    <textarea id="evidence-description" placeholder="Describe your milestone evidence" required></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="evidence-image">Upload Image:</label>
+                    <input type="file" id="evidence-image" accept="image/*">
+                </div>
+                <button type="submit" class="submit-btn">Submit Milestone</button>
+            </form>
         </div>
     </div>
 

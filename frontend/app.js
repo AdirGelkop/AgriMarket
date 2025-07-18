@@ -103,3 +103,146 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 });
+
+// Farmer functionality
+document.addEventListener('DOMContentLoaded', function() {
+    // Add form listeners after existing code
+    const createContractForm = document.getElementById('create-contract-form');
+    const milestoneForm = document.getElementById('milestone-form');
+    
+    if (createContractForm) {
+        createContractForm.addEventListener('submit', handleCreateContract);
+    }
+    
+    if (milestoneForm) {
+        milestoneForm.addEventListener('submit', handleMilestoneSubmit);
+    }
+});
+
+// Handle create contract form submission
+async function handleCreateContract(event) {
+    event.preventDefault();
+    
+    if (!currentAccount) {
+        alert('Please connect MetaMask first');
+        return;
+    }
+    
+    const cropType = document.getElementById('crop-type').value;
+    const quantity = document.getElementById('quantity').value;
+    const pricePerKg = document.getElementById('price-per-kg').value;
+    
+    // Show loading state
+    const submitBtn = event.target.querySelector('.submit-btn');
+    const originalText = submitBtn.textContent;
+    submitBtn.textContent = 'Creating Contract...';
+    submitBtn.disabled = true;
+    
+    try {
+        // Here we'll add blockchain interaction later
+        console.log('Creating contract:', { cropType, quantity, pricePerKg });
+        
+        // Simulate contract creation for now
+        setTimeout(() => {
+            alert(`Contract created successfully!\nCrop: ${cropType}\nQuantity: ${quantity}kg\nPrice: ${pricePerKg} AgriCoin/kg`);
+            
+            // Reset form
+            event.target.reset();
+            
+            // Restore button
+            submitBtn.textContent = originalText;
+            submitBtn.disabled = false;
+            
+            // Refresh contracts list
+            loadFarmerContracts();
+        }, 2000);
+        
+    } catch (error) {
+        console.error('Error creating contract:', error);
+        alert('Failed to create contract');
+        
+        // Restore button
+        submitBtn.textContent = originalText;
+        submitBtn.disabled = false;
+    }
+}
+
+// Handle milestone submission
+async function handleMilestoneSubmit(event) {
+    event.preventDefault();
+    
+    if (!currentAccount) {
+        alert('Please connect MetaMask first');
+        return;
+    }
+    
+    const contractId = document.getElementById('contract-id').value;
+    const milestoneStage = document.getElementById('milestone-stage').value;
+    const description = document.getElementById('evidence-description').value;
+    const imageFile = document.getElementById('evidence-image').files[0];
+    
+    // Show loading state
+    const submitBtn = event.target.querySelector('.submit-btn');
+    const originalText = submitBtn.textContent;
+    submitBtn.textContent = 'Uploading Evidence...';
+    submitBtn.disabled = true;
+    
+    try {
+        console.log('Submitting milestone:', { contractId, milestoneStage, description, imageFile });
+        
+        // Simulate milestone submission
+        setTimeout(() => {
+            alert(`Milestone evidence submitted!\nContract: ${contractId}\nStage: ${milestoneStage}\nDescription: ${description}`);
+            
+            // Reset form
+            event.target.reset();
+            
+            // Restore button
+            submitBtn.textContent = originalText;
+            submitBtn.disabled = false;
+        }, 2000);
+        
+    } catch (error) {
+        console.error('Error submitting milestone:', error);
+        alert('Failed to submit milestone evidence');
+        
+        // Restore button
+        submitBtn.textContent = originalText;
+        submitBtn.disabled = false;
+    }
+}
+
+// Load farmer's contracts
+function loadFarmerContracts() {
+    const contractsList = document.getElementById('farmer-contracts-list');
+    
+    if (!contractsList) return;
+    
+    // Simulate loading contracts
+    contractsList.innerHTML = `
+        <div class="contract-item">
+            <h4>Tomato Contract #001</h4>
+            <p><strong>Quantity:</strong> 100 kg</p>
+            <p><strong>Price:</strong> 5 AgriCoin/kg</p>
+            <p><strong>Status:</strong> <span class="contract-status status-active">Active</span></p>
+            <p><strong>Milestones:</strong> 2/3 completed</p>
+        </div>
+        <div class="contract-item">
+            <h4>Cucumber Contract #002</h4>
+            <p><strong>Quantity:</strong> 50 kg</p>
+            <p><strong>Price:</strong> 3 AgriCoin/kg</p>
+            <p><strong>Status:</strong> <span class="contract-status status-pending">Pending Buyer</span></p>
+            <p><strong>Milestones:</strong> 0/3 completed</p>
+        </div>
+    `;
+}
+
+// Update the existing showPage function to load contracts when farmer page is shown
+const originalShowPage = showPage;
+showPage = function(pageName) {
+    originalShowPage(pageName);
+    
+    if (pageName === 'farmer') {
+        loadFarmerContracts();
+    }
+};
