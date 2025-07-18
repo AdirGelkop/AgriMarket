@@ -11,11 +11,17 @@ AgriMarket enables farmers to sell their crops directly to retailers using block
 - **Digital certificates**: NFT certificates issued for each completed milestone
 - **Multiple crops**: Support for tomatoes, cucumbers, and onions
 - **Transparent tracking**: All transactions recorded on blockchain
+- **Web3 integration**: Full MetaMask connectivity with real blockchain transactions
 
 ## 🏗️ Architecture
 
 ```mermaid
 graph TB
+    subgraph "Frontend Interface"
+        FUI[Web Application<br/>HTML5 + CSS3 + JS]
+        MM[MetaMask Integration<br/>Web3.js]
+    end
+    
     subgraph "AgriMarket Platform"
         AM[AgriMarket.sol<br/>Main Contract]
         AC[AgriCoin.sol<br/>ERC20 Token]
@@ -33,12 +39,12 @@ graph TB
         R[🏪 Retailer]
     end
     
-    F --> TC
-    F --> CC
-    F --> OC
-    R --> TC
-    R --> CC
-    R --> OC
+    F --> FUI
+    R --> FUI
+    FUI --> MM
+    MM --> TC
+    MM --> CC
+    MM --> OC
     
     TC --> AC
     CC --> AC
@@ -71,11 +77,12 @@ Each crop contract has 3 milestones with different payment distributions:
 
 ## 🔄 How It Works
 
-1. **Contract Creation**: Retailer creates a contract specifying crop type, quantity, and total payment
-2. **Milestone Completion**: Farmer marks milestones as completed (seeding, growing, harvest)
-3. **Verification**: Retailer approves completed milestones
-4. **Payment & Certificate**: Automatic payment in AgriCoin + NFT certificate issued
-5. **Contract Completion**: All milestones completed = contract fulfilled
+1. **Contract Creation**: Farmer creates a contract specifying crop type, quantity, and price per kg
+2. **Contract Purchase**: Retailer browses available contracts and purchases one with AgriCoin
+3. **Milestone Completion**: Farmer uploads evidence for each milestone (seeding, growing, harvest)
+4. **Verification**: Retailer approves completed milestones through the web interface
+5. **Payment & Certificate**: Automatic payment in AgriCoin + NFT certificate issued
+6. **Contract Completion**: All milestones completed = contract fulfilled
 
 ## 🛠️ Technology Stack
 
@@ -84,6 +91,8 @@ Each crop contract has 3 milestones with different payment distributions:
 - **Standards**: ERC20 (tokens), ERC721 (NFTs)
 - **Development**: Hardhat, OpenZeppelin
 - **Frontend**: HTML5, CSS3, JavaScript (Web3.js)
+- **Wallet**: MetaMask integration
+- **Deployment**: Sepolia TestNet with Infura
 
 ## 📁 Project Structure
 
@@ -96,12 +105,17 @@ AgriMarket/
 │   ├── CucumberContract.sol
 │   ├── OnionContract.sol
 │   └── AgriMarket.sol
-├── frontend/           # Web interface
+├── frontend/           # Complete web application
+│   ├── index.html      # Single Page Application
+│   ├── style.css       # Modern responsive design
+│   ├── app.js          # Web3 integration logic
+│   └── config.js       # Contract addresses & ABIs
 ├── scripts/            # Deployment scripts
 │   └── deploy.js
 ├── docs/              # Documentation
 ├── addresses.json     # Deployed contract addresses
-└── hardhat.config.js  # Hardhat configuration
+├── hardhat.config.js  # Hardhat configuration
+└── README.md          # This file
 ```
 
 ## 🚀 Deployed Contracts (Sepolia TestNet)
@@ -114,6 +128,57 @@ AgriMarket/
 | CucumberContract | `0xB84F49B9624350437d6e33EB8ac84A253EEFd8DC` | [View](https://sepolia.etherscan.io/address/0xB84F49B9624350437d6e33EB8ac84A253EEFd8DC) |
 | OnionContract | `0x009b332D1d1FF848e64570b2d8b9533a67a58ce6` | [View](https://sepolia.etherscan.io/address/0x009b332D1d1FF848e64570b2d8b9533a67a58ce6) |
 
+## 💻 Running the Application
+
+### Prerequisites
+- MetaMask browser extension
+- Python 3 (for local server)
+- Sepolia testnet ETH (for transactions)
+
+### Installation & Setup
+1. Clone the repository
+2. Navigate to frontend directory: `cd frontend`
+3. Start local server: `python3 -m http.server 8000`
+4. Open browser and go to: `http://localhost:8000`
+5. Connect MetaMask to Sepolia network
+6. Start using the platform!
+
+### Network Configuration
+- **Network Name**: Sepolia
+- **Chain ID**: 11155111
+- **RPC URL**: Available in MetaMask by default
+- **Block Explorer**: https://sepolia.etherscan.io
+
+## 🎯 Platform Features
+
+### 👨‍🌾 Farmer Dashboard
+- Create new crop contracts with quantity and pricing
+- Upload milestone evidence (images + descriptions)
+- Monitor active contracts and payment status
+- View contract history and earnings
+
+### 🏪 Retailer Dashboard
+- Browse available crop contracts
+- Purchase contracts with AgriCoin
+- Approve farmer milestones
+- Track contract progress and deliveries
+- Manage AgriCoin balance
+
+### 🔗 Blockchain Integration
+- Real-time balance checking for AgriCoin and ETH
+- Live transaction submission to Sepolia network
+- Contract interaction through Web3.js
+- MetaMask transaction approval workflow
+
+## 🚀 Current Status
+
+✅ **Smart Contracts**: All 6 contracts developed, tested, and deployed to Sepolia  
+✅ **Frontend Application**: Complete web interface with responsive design  
+✅ **Web3 Integration**: Full MetaMask connectivity and blockchain interaction  
+✅ **User Interfaces**: Comprehensive farmer and retailer dashboards  
+✅ **Transaction Handling**: Real blockchain transactions with proper error handling  
+🔄 **Testing Phase**: Platform ready for comprehensive user testing  
+
 ## 🎯 Project Goals
 
 - **Trust**: Eliminate intermediaries through smart contracts
@@ -121,9 +186,6 @@ AgriMarket/
 - **Fair Payment**: Milestone-based payments protect both parties
 - **Proof of Quality**: NFT certificates provide verifiable crop history
 - **Efficiency**: Direct farmer-to-retailer transactions
+- **User Experience**: Intuitive web interface for non-technical users
 
-## 🚀 Current Status
-
-✅ Smart contracts developed and tested  
-✅ Deployed to Sepolia TestNet successfully  
-🔄 Frontend development in progress
+---
