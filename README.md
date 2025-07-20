@@ -31,7 +31,7 @@ graph TB
     subgraph "Crop Contracts"
         TC[TomatoContract.sol<br/>Mar-Sep]
         CC[CucumberContract.sol<br/>Apr-Aug]
-        OC[OnionContract.sol<br/>Feb-Jul]
+        OC[OnionContract.sol<br/>Mar-Aug]
     end
     
     subgraph "Users"
@@ -66,7 +66,7 @@ graph TB
 - **AgriCertificate.sol** - ERC721 NFT certificates for milestones
 - **TomatoContract.sol** - Manages tomato growing contracts (Mar-Sep)
 - **CucumberContract.sol** - Manages cucumber growing contracts (Apr-Aug)
-- **OnionContract.sol** - Manages onion growing contracts (Feb-Jul)
+- **OnionContract.sol** - Manages onion growing contracts (Mar-Aug)
 - **AgriMarket.sol** - Main platform contract connecting all services
 
 ### Payment Structure
@@ -87,18 +87,18 @@ Each crop contract has 3 milestones with different payment distributions:
 ## 🛠️ Technology Stack
 
 - **Blockchain**: Ethereum (Sepolia Testnet)
-- **Smart Contracts**: Solidity ^0.8.20
+- **Smart Contracts**: Solidity ^0.8.0
 - **Standards**: ERC20 (tokens), ERC721 (NFTs)
 - **Development**: Hardhat, OpenZeppelin
 - **Frontend**: HTML5, CSS3, JavaScript (Web3.js)
 - **Wallet**: MetaMask integration
-- **Deployment**: Sepolia TestNet with Infura
+- **Deployment**: Sepolia TestNet
 
 ## 📁 Project Structure
 
 ```
 AgriMarket/
-├── contracts/          # Smart contracts
+├── contracts/          # Smart contracts (6 contracts deployed)
 │   ├── AgriCoin.sol
 │   ├── AgriCertificate.sol
 │   ├── TomatoContract.sol
@@ -112,7 +112,6 @@ AgriMarket/
 │   └── config.js       # Contract addresses & ABIs
 ├── scripts/            # Deployment scripts
 │   └── deploy.js
-├── docs/              # Documentation
 ├── addresses.json     # Deployed contract addresses
 ├── hardhat.config.js  # Hardhat configuration
 └── README.md          # This file
@@ -144,7 +143,7 @@ AgriMarket/
 6. Start using the platform!
 
 ### Network Configuration
-- **Network Name**: Sepolia
+- **Network Name**: Sepolia Test Network
 - **Chain ID**: 11155111
 - **RPC URL**: Available in MetaMask by default
 - **Block Explorer**: https://sepolia.etherscan.io
@@ -155,20 +154,21 @@ AgriMarket/
 - Create new crop contracts with quantity and pricing
 - Upload milestone evidence (images + descriptions)
 - Monitor active contracts and payment status
-- View contract history and earnings
+- View contract history and blockchain status
 
 ### 🏪 Retailer Dashboard
 - Browse available crop contracts
 - Purchase contracts with AgriCoin
 - Approve farmer milestones
 - Track contract progress and deliveries
-- Manage AgriCoin balance
+- Real-time AgriCoin balance display
 
 ### 🔗 Blockchain Integration
-- Real-time balance checking for AgriCoin and ETH
+- Real-time balance checking for AgriCoin (1,000,000 AGRI initial balance)
 - Live transaction submission to Sepolia network
 - Contract interaction through Web3.js
 - MetaMask transaction approval workflow
+- Full responsive design for mobile devices
 
 ## 🚀 Current Status
 
@@ -177,7 +177,29 @@ AgriMarket/
 ✅ **Web3 Integration**: Full MetaMask connectivity and blockchain interaction  
 ✅ **User Interfaces**: Comprehensive farmer and retailer dashboards  
 ✅ **Transaction Handling**: Real blockchain transactions with proper error handling  
-🔄 **Testing Phase**: Platform ready for comprehensive user testing  
+✅ **Testing Complete**: Platform tested comprehensively and ready for demonstration  
+✅ **POC Ready**: Proof of concept fully functional for course submission  
+
+## 🧪 Testing Results
+
+### Contract Creation (Farmer Workflow)
+- ✅ Tomato contracts: Successfully created and recorded on blockchain
+- ✅ Cucumber contracts: Successfully created and recorded on blockchain  
+- ✅ Onion contracts: Successfully created and recorded on blockchain
+- ✅ All transactions generate valid Sepolia transaction hashes
+- ✅ Gas optimization: Contracts deploy and execute within reasonable gas limits
+
+### Retailer Workflow
+- ✅ AgriCoin balance display: Shows real balance from smart contract
+- ✅ Contract browsing: Interface displays available contracts
+- ✅ Purchase functionality: Demonstrates complete purchase workflow
+- ✅ Mobile compatibility: Full responsive design tested and working
+
+### Blockchain Connectivity
+- ✅ MetaMask integration: Seamless wallet connection and transaction signing
+- ✅ Sepolia network: All contracts deployed and verified on testnet
+- ✅ Web3.js integration: Real-time blockchain data reading and writing
+- ✅ Error handling: Proper user feedback for transaction successes and failures
 
 ## 🎯 Project Goals
 
@@ -187,5 +209,15 @@ AgriMarket/
 - **Proof of Quality**: NFT certificates provide verifiable crop history
 - **Efficiency**: Direct farmer-to-retailer transactions
 - **User Experience**: Intuitive web interface for non-technical users
+
+## 📝 Notes
+
+This is a **Proof of Concept (POC)** developed for educational purposes. The platform demonstrates:
+- Smart contract development and deployment
+- Web3 integration with real blockchain networks
+- User interface design for decentralized applications
+- Understanding of blockchain technology principles
+
+The project successfully connects to Sepolia testnet and executes real blockchain transactions, proving the viability of blockchain-based agricultural marketplace solutions.
 
 ---
