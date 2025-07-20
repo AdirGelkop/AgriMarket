@@ -8,7 +8,7 @@ const CONTRACT_ADDRESSES = {
     AgriMarket: "0x" // Will be added if needed
 };
 
-// Simplified ABIs for the contracts we need
+// Corrected ABIs matching the actual smart contracts
 const CONTRACT_ABIS = {
     AgriCoin: [
         {
@@ -36,66 +36,123 @@ const CONTRACT_ABIS = {
     
     TomatoContract: [
         {
-            "inputs": [{"type": "uint256", "name": "quantity"}, {"type": "uint256", "name": "pricePerKg"}],
+            "inputs": [
+                {"name": "_farmer", "type": "address"},
+                {"name": "_buyer", "type": "address"}, 
+                {"name": "_totalAmount", "type": "uint256"},
+                {"name": "_quantity", "type": "uint256"}
+            ],
             "name": "createContract",
+            "outputs": [{"name": "", "type": "uint256"}],
+            "stateMutability": "nonpayable",
             "type": "function"
         },
         {
-            "inputs": [{"type": "uint256", "name": "contractId"}],
-            "name": "purchaseContract",
-            "type": "function"
-        },
-        {
-            "inputs": [{"type": "uint256", "name": "contractId"}, {"type": "uint256", "name": "milestone"}],
-            "name": "approveMilestone",
-            "type": "function"
-        },
-        {
-            "inputs": [{"type": "uint256", "name": "contractId"}],
+            "inputs": [{"name": "_contractId", "type": "uint256"}],
             "name": "getContract",
             "outputs": [{"type": "tuple", "components": [
-                {"type": "address", "name": "farmer"},
-                {"type": "address", "name": "buyer"},
-                {"type": "uint256", "name": "quantity"},
-                {"type": "uint256", "name": "pricePerKg"},
-                {"type": "bool", "name": "isActive"}
+                {"name": "contractId", "type": "uint256"},
+                {"name": "farmer", "type": "address"},
+                {"name": "buyer", "type": "address"},
+                {"name": "totalAmount", "type": "uint256"},
+                {"name": "quantity", "type": "uint256"},
+                {"name": "isActive", "type": "bool"},
+                {"name": "isCompleted", "type": "bool"}
             ]}],
+            "stateMutability": "view",
+            "type": "function"
+        },
+        {
+            "inputs": [{"name": "_contractId", "type": "uint256"}, {"name": "_milestoneIndex", "type": "uint256"}],
+            "name": "approveMilestone",
+            "stateMutability": "nonpayable",
+            "type": "function"
+        },
+        {
+            "inputs": [{"name": "_contractId", "type": "uint256"}, {"name": "_milestoneIndex", "type": "uint256"}],
+            "name": "completeMilestone",
+            "stateMutability": "nonpayable",
+            "type": "function"
+        },
+        {
+            "inputs": [],
+            "name": "contractCounter",
+            "outputs": [{"name": "", "type": "uint256"}],
+            "stateMutability": "view",
             "type": "function"
         }
     ],
     
     CucumberContract: [
         {
-            "inputs": [{"type": "uint256", "name": "quantity"}, {"type": "uint256", "name": "pricePerKg"}],
+            "inputs": [
+                {"name": "_farmer", "type": "address"},
+                {"name": "_buyer", "type": "address"}, 
+                {"name": "_totalAmount", "type": "uint256"},
+                {"name": "_quantity", "type": "uint256"}
+            ],
             "name": "createContract",
+            "outputs": [{"name": "", "type": "uint256"}],
+            "stateMutability": "nonpayable",
             "type": "function"
         },
         {
-            "inputs": [{"type": "uint256", "name": "contractId"}],
-            "name": "purchaseContract",
+            "inputs": [{"name": "_contractId", "type": "uint256"}],
+            "name": "getContract",
+            "outputs": [{"type": "tuple", "components": [
+                {"name": "contractId", "type": "uint256"},
+                {"name": "farmer", "type": "address"},
+                {"name": "buyer", "type": "address"},
+                {"name": "totalAmount", "type": "uint256"},
+                {"name": "quantity", "type": "uint256"},
+                {"name": "isActive", "type": "bool"},
+                {"name": "isCompleted", "type": "bool"}
+            ]}],
+            "stateMutability": "view",
             "type": "function"
         },
         {
-            "inputs": [{"type": "uint256", "name": "contractId"}, {"type": "uint256", "name": "milestone"}],
-            "name": "approveMilestone",
+            "inputs": [],
+            "name": "contractCounter",
+            "outputs": [{"name": "", "type": "uint256"}],
+            "stateMutability": "view",
             "type": "function"
         }
     ],
     
     OnionContract: [
         {
-            "inputs": [{"type": "uint256", "name": "quantity"}, {"type": "uint256", "name": "pricePerKg"}],
+            "inputs": [
+                {"name": "_farmer", "type": "address"},
+                {"name": "_buyer", "type": "address"}, 
+                {"name": "_totalAmount", "type": "uint256"},
+                {"name": "_quantity", "type": "uint256"}
+            ],
             "name": "createContract",
+            "outputs": [{"name": "", "type": "uint256"}],
+            "stateMutability": "nonpayable",
             "type": "function"
         },
         {
-            "inputs": [{"type": "uint256", "name": "contractId"}],
-            "name": "purchaseContract",
+            "inputs": [{"name": "_contractId", "type": "uint256"}],
+            "name": "getContract",
+            "outputs": [{"type": "tuple", "components": [
+                {"name": "contractId", "type": "uint256"},
+                {"name": "farmer", "type": "address"},
+                {"name": "buyer", "type": "address"},
+                {"name": "totalAmount", "type": "uint256"},
+                {"name": "quantity", "type": "uint256"},
+                {"name": "isActive", "type": "bool"},
+                {"name": "isCompleted", "type": "bool"}
+            ]}],
+            "stateMutability": "view",
             "type": "function"
         },
         {
-            "inputs": [{"type": "uint256", "name": "contractId"}, {"type": "uint256", "name": "milestone"}],
-            "name": "approveMilestone",
+            "inputs": [],
+            "name": "contractCounter",
+            "outputs": [{"name": "", "type": "uint256"}],
+            "stateMutability": "view",
             "type": "function"
         }
     ]
