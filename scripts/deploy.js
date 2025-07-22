@@ -47,6 +47,19 @@ async function main() {
    await onionContract.deployed();
    console.log("OnionContract deployed to:", onionContract.address);
    
+   // Deploy AgriMarket
+   console.log("\n6. Deploying AgriMarket...");
+   const AgriMarket = await ethers.getContractFactory("AgriMarket");
+   const agriMarket = await AgriMarket.deploy(
+       agriCoin.address,
+       agriCertificate.address,
+       tomatoContract.address,
+       cucumberContract.address,
+       onionContract.address
+   );
+   await agriMarket.deployed();
+   console.log("AgriMarket deployed to:", agriMarket.address);
+   
    // Save contract addresses to file
    const addresses = {
        network: "sepolia",
@@ -56,7 +69,8 @@ async function main() {
            AgriCertificate: agriCertificate.address,
            TomatoContract: tomatoContract.address,
            CucumberContract: cucumberContract.address,
-           OnionContract: onionContract.address
+           OnionContract: onionContract.address,
+           AgriMarket: agriMarket.address
        }
    };
    

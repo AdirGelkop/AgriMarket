@@ -1,11 +1,12 @@
 {
   "network": "sepolia",
-  "deployedAt": "2025-07-16T16:55:40.323Z",
+  "deployedAt": "2025-07-22T16:01:12.738Z",
   "contracts": {
-    "AgriCoin": "0x98C1D042206d844Ee13b4c41FfA8D59dfd3F85e9",
-    "AgriCertificate": "0xDC7F26E092Ea61f82f574d8Dd7a2AcC61D861712",
-    "TomatoContract": "0x056b3Da815124AE59C729FF10AA4e5a140A7B942",
-    "CucumberContract": "0xB84F49B9624350437d6e33EB8ac84A253EEFd8DC",
-    "OnionContract": "0x009b332D1d1FF848e64570b2d8b9533a67a58ce6"
+    "AgriCoin": "0xE3b55d7Fc71a5e5315DB62DA69567A4Cf8AE48E7",
+    "AgriCertificate": "0xC2084811c395503116C1aC2b00086589898b326A",
+    "TomatoContract": "0xf29F61630af357C7279377C16f0c283caCa88E4f",
+    "CucumberContract": "0x9b1DE25FcCf4d324323f30606B81ba9352cd1602",
+    "OnionContract": "0x32a94C50F253fB4e5FFf0a60dacf81eCe3315Dc6",
+    "AgriMarket": "0x437fbd84B3595BF4C6d47D7fc85213741266d7ef"
   }
 }

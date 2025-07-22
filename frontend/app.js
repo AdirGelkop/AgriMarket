@@ -380,7 +380,6 @@ async function handleMilestoneApproval(event) {
     }
 }
 
-// Handle AgriCoin purchase
 // Handle AgriCoin purchase - REAL BLOCKCHAIN VERSION
 async function handleBuyAgriCoin() {
     if (!currentAccount) {
@@ -400,20 +399,18 @@ async function handleBuyAgriCoin() {
         
         console.log(`Buying ${amount} AGRI for ${ethNeeded} ETH`);
         
-        // For demo purposes, we'll simulate buying by transferring ETH to a dummy address
-        // In a real system, there would be a proper exchange contract
-        const transaction = await web3.eth.sendTransaction({
+        // Use AgriMarket contract to buy AgriCoin
+        const transaction = await contracts.AgriMarket.methods.buyAgriCoin().send({
             from: currentAccount,
-            to: '0x0000000000000000000000000000000000000001', // Dummy address
             value: ethInWei,
-            gas: 21000
+            gas: 300000
         });
         
-        alert(`✅ AgriCoin purchase simulated!\n\nAmount: ${amount} AGRI\nCost: ${ethNeeded} ETH\nTransaction: ${transaction.transactionHash}\n\nNote: This is a demo - no actual tokens transferred.`);
+        alert(`✅ AgriCoin purchased successfully!\n\nAmount: ${amount} AGRI\nCost: ${ethNeeded} ETH\nTransaction: ${transaction.transactionHash}`);
         
         // Refresh balance
         setTimeout(() => {
-            testContractConnections();
+            updateAgriCoinBalance();
         }, 2000);
         
     } catch (error) {
@@ -422,6 +419,8 @@ async function handleBuyAgriCoin() {
         let errorMessage = 'Failed to buy AgriCoin';
         if (error.message.includes('User denied')) {
             errorMessage = 'Transaction was cancelled by user';
+        } else if (error.message.includes('Not enough AgriCoin')) {
+            errorMessage = 'Not enough AgriCoin available in contract';
         }
         
         alert('❌ ' + errorMessage);
@@ -567,7 +566,9 @@ async function initializeContracts() {
         contracts.TomatoContract = new web3.eth.Contract(CONTRACT_ABIS.TomatoContract, CONTRACT_ADDRESSES.TomatoContract);
         contracts.CucumberContract = new web3.eth.Contract(CONTRACT_ABIS.CucumberContract, CONTRACT_ADDRESSES.CucumberContract);
         contracts.OnionContract = new web3.eth.Contract(CONTRACT_ABIS.OnionContract, CONTRACT_ADDRESSES.OnionContract);
-        
+        contracts.AgriCertificate = new web3.eth.Contract(CONTRACT_ABIS.AgriCertificate, CONTRACT_ADDRESSES.AgriCertificate);
+        contracts.AgriMarket = new web3.eth.Contract(CONTRACT_ABIS.AgriMarket, CONTRACT_ADDRESSES.AgriMarket);
+
         console.log('Contracts initialized successfully');
         return true;
         
