@@ -8,9 +8,11 @@ AgriMarket is a blockchain-based marketplace that enables direct trading between
 
 ## 🎥 Live Demo
 
+<div align="center">
+
 [![AgriMarket Demo](https://img.youtube.com/vi/NqkmF4H8WUA/0.jpg)](https://youtu.be/NqkmF4H8WUA)
 
-**[Watch Full Demo on YouTube →](https://youtu.be/NqkmF4H8WUA)**
+</div>
 
 ### Key Features
 - Smart contract automation for farming agreements
