@@ -1,7 +1,6 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
-// Import ERC721 standard from OpenZeppelin
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/utils/Strings.sol";
@@ -10,12 +9,11 @@ import "@openzeppelin/contracts/utils/Strings.sol";
 contract AgriCertificate is ERC721, Ownable {
     using Strings for uint256;
     
-    // Counter for token IDs
     uint256 private _tokenIdCounter;
     
-    // Struct to store certificate data
+    // Certificate data structure
     struct CertificateData {
-        address farmer;           // Address of the farmer
+        address farmer;           // Farmer's address
         string cropType;          // Type of crop (tomato, cucumber, onion)
         uint256 milestoneNumber;  // Milestone number (1, 2, or 3)
         string description;       // Description of the milestone
@@ -25,7 +23,6 @@ contract AgriCertificate is ERC721, Ownable {
     // Mapping from token ID to certificate data
     mapping(uint256 => CertificateData) public certificates;
     
-    // Constructor - runs once when contract is deployed
     constructor() ERC721("AgriCertificate", "AGRI-CERT") Ownable(msg.sender) {
         _tokenIdCounter = 1; // Start token IDs from 1
     }

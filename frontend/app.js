@@ -1,5 +1,9 @@
+// Global variables
+let web3;
+let currentAccount;
+let contracts = {};
+
 // Page navigation functionality
-// Update showPage function to load content properly
 function showPage(pageName) {
     // Hide all pages
     const pages = document.querySelectorAll('.page');
@@ -23,16 +27,6 @@ function showPage(pageName) {
     }
 }
 
-// Initialize app when page loads
-document.addEventListener('DOMContentLoaded', function() {
-    console.log('AgriMarket app initialized');
-    showPage('home');
-});
-
-// Web3 and MetaMask functionality
-let web3;
-let currentAccount;
-
 // Initialize MetaMask connection
 async function connectWallet() {
     if (typeof window.ethereum !== 'undefined') {
@@ -54,7 +48,7 @@ async function connectWallet() {
             }
             
             // Update UI
-            updateWalletUI();
+            await updateWalletUI();
             
         } catch (error) {
             console.error('Error connecting to MetaMask:', error);
@@ -68,36 +62,33 @@ async function connectWallet() {
 // Update wallet UI display
 async function updateWalletUI() {
     if (currentAccount) {
-        // Get ETH balance
-        const balance = await web3.eth.getBalance(currentAccount);
-        const balanceInEth = web3.utils.fromWei(balance, 'ether');
-        
-        // Update UI elements
-        document.getElementById('wallet-address').textContent = 
-            currentAccount.substring(0, 6) + '...' + currentAccount.substring(38);
-        document.getElementById('wallet-balance').textContent = 
-            parseFloat(balanceInEth).toFixed(4);
-        
-        // Show wallet info, hide connect button
-        document.getElementById('connect-wallet').style.display = 'none';
-        document.getElementById('wallet-info').style.display = 'block';
-        
-        // Initialize contracts after wallet connection
-        await initializeContracts();
-        await testContractConnections();
-        
-        // Refresh current page content
-        const currentPage = document.querySelector('.page.active');
-        if (currentPage) {
-            const pageName = currentPage.id.replace('-page', '');
-            if (pageName === 'retailer') {
-                refreshRetailerContent();
-            } else if (pageName === 'farmer') {
-                loadFarmerContracts();
-            }
+        try {
+            // Get ETH balance
+            const balance = await web3.eth.getBalance(currentAccount);
+            const balanceInEth = web3.utils.fromWei(balance, 'ether');
+            
+            // Update UI elements
+            document.getElementById('wallet-address').textContent = 
+                currentAccount.substring(0, 6) + '...' + currentAccount.substring(38);
+            document.getElementById('wallet-balance').textContent = 
+                parseFloat(balanceInEth).toFixed(4);
+            
+            // Show wallet info, hide connect button
+            document.getElementById('connect-wallet').style.display = 'none';
+            document.getElementById('wallet-info').style.display = 'block';
+            
+            // Initialize contracts after wallet connection
+            await initializeContracts();
+            await testContractConnections();
+            
+            // Refresh current page content
+            refreshCurrentPageContent();
+            
+        } catch (error) {
+            console.error('Error updating wallet UI:', error);
         }
     }
- }
+}
 
 // Disconnect wallet
 function disconnectWallet() {
@@ -109,44 +100,62 @@ function disconnectWallet() {
     document.getElementById('wallet-info').style.display = 'none';
 }
 
-// Add event listeners when page loads
-document.addEventListener('DOMContentLoaded', function() {
-    console.log('AgriMarket app initialized');
-    showPage('home');
-    
-    // Add wallet button listeners
-    document.getElementById('connect-wallet').addEventListener('click', connectWallet);
-    document.getElementById('disconnect-wallet').addEventListener('click', disconnectWallet);
-    
-    // Listen for account changes
-    if (typeof window.ethereum !== 'undefined') {
-        window.ethereum.on('accountsChanged', function (accounts) {
-            if (accounts.length === 0) {
-                disconnectWallet();
-            } else {
-                currentAccount = accounts[0];
-                updateWalletUI();
-            }
-        });
+// Initialize contract connections
+async function initializeContracts() {
+    if (!web3 || !currentAccount) {
+        console.log('Web3 or account not available');
+        return false;
     }
-});
+    
+    try {
+        // Initialize contract instances
+        contracts.AgriCoin = new web3.eth.Contract(CONTRACT_ABIS.AgriCoin, CONTRACT_ADDRESSES.AgriCoin);
+        contracts.TomatoContract = new web3.eth.Contract(CONTRACT_ABIS.TomatoContract, CONTRACT_ADDRESSES.TomatoContract);
+        contracts.CucumberContract = new web3.eth.Contract(CONTRACT_ABIS.CucumberContract, CONTRACT_ADDRESSES.CucumberContract);
+        contracts.OnionContract = new web3.eth.Contract(CONTRACT_ABIS.OnionContract, CONTRACT_ADDRESSES.OnionContract);
+        contracts.AgriCertificate = new web3.eth.Contract(CONTRACT_ABIS.AgriCertificate, CONTRACT_ADDRESSES.AgriCertificate);
+        contracts.AgriMarket = new web3.eth.Contract(CONTRACT_ABIS.AgriMarket, CONTRACT_ADDRESSES.AgriMarket);
 
-// Farmer functionality
-document.addEventListener('DOMContentLoaded', function() {
-    // Add form listeners after existing code
-    const createContractForm = document.getElementById('create-contract-form');
-    const milestoneForm = document.getElementById('milestone-form');
-    
-    if (createContractForm) {
-        createContractForm.addEventListener('submit', handleCreateContract);
+        console.log('Contracts initialized successfully');
+        return true;
+        
+    } catch (error) {
+        console.error('Error initializing contracts:', error);
+        return false;
     }
-    
-    if (milestoneForm) {
-        milestoneForm.addEventListener('submit', handleMilestoneSubmit);
-    }
-});
+}
 
-// Handle create contract form submission - SIMPLIFIED VERSION
+// Test contract connectivity
+async function testContractConnections() {
+    if (!currentAccount) {
+        alert('Please connect MetaMask first');
+        return;
+    }
+    
+    try {
+        console.log('Testing contract connections...');
+        
+        // Test AgriCoin balance
+        const agriBalance = await contracts.AgriCoin.methods.balanceOf(currentAccount).call();
+        console.log('AgriCoin balance:', web3.utils.fromWei(agriBalance, 'ether'), 'AGRI');
+        
+        // Update UI with real balance
+        const balanceElement = document.getElementById('retailer-agricoin-balance');
+        if (balanceElement) {
+            balanceElement.textContent = parseFloat(web3.utils.fromWei(agriBalance, 'ether')).toFixed(2);
+        }
+        
+        console.log('Contract connections working!');
+        return true;
+        
+    } catch (error) {
+        console.error('Contract connection test failed:', error);
+        alert('Failed to connect to contracts. Make sure you are on Sepolia network.');
+        return false;
+    }
+}
+
+// Handle create contract form submission
 async function handleCreateContract(event) {
     event.preventDefault();
     
@@ -206,12 +215,12 @@ async function handleCreateContract(event) {
             quantity         // _quantity
         ).send({
             from: currentAccount,
-            gas: 500000 // Increased gas limit
+            gas: 500000
         });
         
         console.log('Transaction successful:', transaction.transactionHash);
         
-        alert(`✅ Contract created successfully!\n\nCrop: ${cropType}\nQuantity: ${quantity}kg\nPrice: ${pricePerKg} AGRI/kg\nTotal: ${quantity * pricePerKg} AGRI\n\nTransaction: ${transaction.transactionHash}`);
+        alert(`Contract created successfully!\n\nCrop: ${cropType}\nQuantity: ${quantity}kg\nPrice: ${pricePerKg} AGRI/kg\nTotal: ${quantity * pricePerKg} AGRI\n\nTransaction: ${transaction.transactionHash}`);
         
         // Reset form
         event.target.reset();
@@ -231,7 +240,7 @@ async function handleCreateContract(event) {
             errorMessage = 'Contract execution failed - this is normal for POC demo';
         }
         
-        alert('❌ ' + errorMessage);
+        alert(errorMessage);
         
     } finally {
         // Restore button
@@ -285,7 +294,7 @@ async function handleMilestoneSubmit(event) {
     }
 }
 
-// Load farmer's contracts - SIMPLIFIED VERSION FOR POC
+// Load farmer's contracts
 function loadFarmerContracts() {
     const contractsList = document.getElementById('farmer-contracts-list');
     
@@ -308,35 +317,6 @@ function loadFarmerContracts() {
         </div>
     `;
 }
-
-// Update the existing showPage function to load contracts when farmer page is shown
-const originalShowPage = showPage;
-showPage = function(pageName) {
-    originalShowPage(pageName);
-    
-    if (pageName === 'farmer') {
-        loadFarmerContracts();
-    }
-};
-
-// Add retailer form listener to existing DOMContentLoaded
-document.addEventListener('DOMContentLoaded', function() {
-    // ... existing code ...
-    
-    // Add retailer form listeners
-    const approveMilestoneForm = document.getElementById('approve-milestone-form');
-    const buyAgricoinBtn = document.getElementById('buy-agricoin-btn');
-    
-    if (approveMilestoneForm) {
-        approveMilestoneForm.addEventListener('submit', handleMilestoneApproval);
-        console.log('Approve milestone form listener added');
-    }
-    
-    if (buyAgricoinBtn) {
-        buyAgricoinBtn.addEventListener('click', handleBuyAgriCoin);
-        console.log('Buy AgriCoin button listener added');
-    }
-});
 
 // Handle milestone approval
 async function handleMilestoneApproval(event) {
@@ -380,7 +360,7 @@ async function handleMilestoneApproval(event) {
     }
 }
 
-// Handle AgriCoin purchase - REAL BLOCKCHAIN VERSION
+// Handle AgriCoin purchase
 async function handleBuyAgriCoin() {
     if (!currentAccount) {
         alert('Please connect MetaMask first');
@@ -406,7 +386,7 @@ async function handleBuyAgriCoin() {
             gas: 300000
         });
         
-        alert(`✅ AgriCoin purchased successfully!\n\nAmount: ${amount} AGRI\nCost: ${ethNeeded} ETH\nTransaction: ${transaction.transactionHash}`);
+        alert(`AgriCoin purchased successfully!\n\nAmount: ${amount} AGRI\nCost: ${ethNeeded} ETH\nTransaction: ${transaction.transactionHash}`);
         
         // Refresh balance
         setTimeout(() => {
@@ -423,16 +403,15 @@ async function handleBuyAgriCoin() {
             errorMessage = 'Not enough AgriCoin available in contract';
         }
         
-        alert('❌ ' + errorMessage);
+        alert(errorMessage);
     }
 }
 
-// Load available contracts for retailers - ALWAYS SHOW VERSION
+// Load available contracts for retailers
 function loadAvailableContracts() {
     const contractsList = document.getElementById('available-contracts-list');
     if (!contractsList) return;
     
-    // Always show demo content - no wallet check
     contractsList.innerHTML = `
         <div class="contract-card">
             <div class="contract-header">
@@ -445,7 +424,7 @@ function loadAvailableContracts() {
                 <div class="contract-detail"><strong>Total Cost:</strong> 50 AGRI</div>
                 <div class="contract-detail"><strong>Status:</strong> Available for Purchase</div>
             </div>
-            <button class="purchase-btn" onclick="alert('Purchase functionality demonstrated! ✅\\n\\nThis shows the retailer interface is working.')">Purchase Contract (Demo)</button>
+            <button class="purchase-btn" onclick="alert('Purchase functionality demonstrated! The retailer interface is working.')">Purchase Contract (Demo)</button>
         </div>
         
         <div class="contract-card">
@@ -459,19 +438,18 @@ function loadAvailableContracts() {
                 <div class="contract-detail"><strong>Total Cost:</strong> 45 AGRI</div>
                 <div class="contract-detail"><strong>Status:</strong> Available for Purchase</div>
             </div>
-            <button class="purchase-btn" onclick="alert('Purchase functionality demonstrated! ✅\\n\\nThis is a POC showing blockchain connectivity.')">Purchase Contract (Demo)</button>
+            <button class="purchase-btn" onclick="alert('Purchase functionality demonstrated! This is a POC showing blockchain connectivity.')">Purchase Contract (Demo)</button>
         </div>
         
         <p><em>Note: POC demonstration showing retailer interface functionality and blockchain connectivity.</em></p>
     `;
 }
 
-// Load retailer's purchased contracts - ALWAYS SHOW VERSION
+// Load retailer's purchased contracts
 function loadRetailerContracts() {
     const contractsList = document.getElementById('retailer-contracts-list');
     if (!contractsList) return;
     
-    // Always show demo content - no wallet check
     contractsList.innerHTML = `
         <div class="contract-item">
             <h4>🍅 Demo Purchased Contract</h4>
@@ -488,7 +466,7 @@ function loadRetailerContracts() {
     `;
 }
 
-// Update AgriCoin balance display - KEEP THIS ONE (already working!)
+// Update AgriCoin balance display
 async function updateAgriCoinBalance() {
     const balanceElement = document.getElementById('retailer-agricoin-balance');
     if (!balanceElement || !currentAccount || !contracts.AgriCoin) {
@@ -505,170 +483,27 @@ async function updateAgriCoinBalance() {
     }
 }
 
-// Update AgriCoin balance display - REAL VERSION
-async function updateAgriCoinBalance() {
-    const balanceElement = document.getElementById('retailer-agricoin-balance');
-    if (!balanceElement || !currentAccount || !contracts.AgriCoin) {
-        return;
-    }
-    
-    try {
-        const agriBalance = await contracts.AgriCoin.methods.balanceOf(currentAccount).call();
-        const balanceInAGRI = parseFloat(web3.utils.fromWei(agriBalance, 'ether')).toFixed(2);
-        balanceElement.textContent = balanceInAGRI;
-    } catch (error) {
-        console.error('Error getting AgriCoin balance:', error);
-        balanceElement.textContent = 'Error loading balance';
-    }
-}
-
-// Purchase contract function
-function purchaseContract(contractId) {
-    if (!currentAccount) {
-        alert('Please connect MetaMask first');
-        return;
-    }
-    
-    if (confirm(`Do you want to purchase contract #${contractId}?`)) {
-        alert(`Contract #${contractId} purchased successfully!`);
-        loadAvailableContracts();
-        loadRetailerContracts();
-    }
-}
-
-// Update showPage function for retailer
-const originalShowPage2 = showPage;
-showPage = function(pageName) {
-    originalShowPage2(pageName);
-    
-    if (pageName === 'farmer') {
-        loadFarmerContracts();
-    } else if (pageName === 'retailer') {
-        loadAvailableContracts();
-        loadRetailerContracts();
-        updateAgriCoinBalance();
-    }
-};
-
-// Contract instances
-let contracts = {};
-
-// Initialize contract connections
-async function initializeContracts() {
-    if (!web3 || !currentAccount) {
-        console.log('Web3 or account not available');
-        return false;
-    }
-    
-    try {
-        // Initialize contract instances
-        contracts.AgriCoin = new web3.eth.Contract(CONTRACT_ABIS.AgriCoin, CONTRACT_ADDRESSES.AgriCoin);
-        contracts.TomatoContract = new web3.eth.Contract(CONTRACT_ABIS.TomatoContract, CONTRACT_ADDRESSES.TomatoContract);
-        contracts.CucumberContract = new web3.eth.Contract(CONTRACT_ABIS.CucumberContract, CONTRACT_ADDRESSES.CucumberContract);
-        contracts.OnionContract = new web3.eth.Contract(CONTRACT_ABIS.OnionContract, CONTRACT_ADDRESSES.OnionContract);
-        contracts.AgriCertificate = new web3.eth.Contract(CONTRACT_ABIS.AgriCertificate, CONTRACT_ADDRESSES.AgriCertificate);
-        contracts.AgriMarket = new web3.eth.Contract(CONTRACT_ABIS.AgriMarket, CONTRACT_ADDRESSES.AgriMarket);
-
-        console.log('Contracts initialized successfully');
-        return true;
-        
-    } catch (error) {
-        console.error('Error initializing contracts:', error);
-        return false;
-    }
-}
-
-// Test contract connectivity
-async function testContractConnections() {
-    if (!currentAccount) {
-        alert('Please connect MetaMask first');
-        return;
-    }
-    
-    try {
-        console.log('Testing contract connections...');
-        
-        // Test AgriCoin balance
-        const agriBalance = await contracts.AgriCoin.methods.balanceOf(currentAccount).call();
-        console.log('AgriCoin balance:', web3.utils.fromWei(agriBalance, 'ether'), 'AGRI');
-        
-        // Update UI with real balance
-        const balanceElement = document.getElementById('retailer-agricoin-balance');
-        if (balanceElement) {
-            balanceElement.textContent = parseFloat(web3.utils.fromWei(agriBalance, 'ether')).toFixed(2);
-        }
-        
-        console.log('Contract connections working!');
-        return true;
-        
-    } catch (error) {
-        console.error('Contract connection test failed:', error);
-        alert('Failed to connect to contracts. Make sure you are on Sepolia network.');
-        return false;
-    }
-}
-
-// Update the existing wallet connection function
-async function updateWalletUI() {
-    if (currentAccount) {
-        // Get ETH balance
-        const balance = await web3.eth.getBalance(currentAccount);
-        const balanceInEth = web3.utils.fromWei(balance, 'ether');
-        
-        // Update UI elements
-        document.getElementById('wallet-address').textContent = 
-            currentAccount.substring(0, 6) + '...' + currentAccount.substring(38);
-        document.getElementById('wallet-balance').textContent = 
-            parseFloat(balanceInEth).toFixed(4);
-        
-        // Show wallet info, hide connect button
-        document.getElementById('connect-wallet').style.display = 'none';
-        document.getElementById('wallet-info').style.display = 'block';
-        
-        // Initialize contracts after wallet connection
-        await initializeContracts();
-        await testContractConnections();
-    }
-}
-
-// Add contract testing button (temporary for debugging)
-function addTestButton() {
-    const testBtn = document.createElement('button');
-    testBtn.textContent = 'Test Contracts';
-    testBtn.style.position = 'fixed';
-    testBtn.style.bottom = '20px';
-    testBtn.style.right = '20px';
-    testBtn.style.zIndex = '1000';
-    testBtn.className = 'wallet-btn';
-    testBtn.onclick = testContractConnections;
-    document.body.appendChild(testBtn);
-}
-
-// Add test button when page loads
-document.addEventListener('DOMContentLoaded', function() {
-    // ... existing code ...
-    
-    // Add test button for debugging
-    addTestButton();
-});
-
-// Force refresh retailer content when wallet connects
-async function refreshRetailerContent() {
-    if (currentAccount && document.getElementById('retailer-page').classList.contains('active')) {
-        loadAvailableContracts();
-        loadRetailerContracts();
-        updateAgriCoinBalance();
-    }
-}
-
-// Force refresh retailer content when wallet connects
-async function refreshRetailerContent() {
-    // Add small delay to ensure currentAccount is set
+// Refresh current page content
+function refreshCurrentPageContent() {
     setTimeout(() => {
         if (currentAccount && document.getElementById('retailer-page').classList.contains('active')) {
             loadAvailableContracts();
             loadRetailerContracts();
             updateAgriCoinBalance();
+        } else if (currentAccount && document.getElementById('farmer-page').classList.contains('active')) {
+            loadFarmerContracts();
         }
     }, 500);
 }
+
+// Initialize app when page loads
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('AgriMarket app initialized');
+    showPage('home');
+    
+    // Add wallet button listeners
+    document.getElementById('connect-wallet').addEventListener('click', connectWallet);
+    document.getElementById('disconnect-wallet').addEventListener('click', disconnectWallet);
+    
+    // Add form listeners
+    const createCont
