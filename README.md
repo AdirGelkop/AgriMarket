@@ -6,7 +6,7 @@ A decentralized application connecting farmers and retailers through smart contr
 
 AgriMarket is a blockchain-based marketplace that enables direct trading between farmers and retailers. The platform uses smart contracts to automate payments based on farming milestones and issues NFT certificates for completed stages. Farmers can create contracts for their crops, and retailers can purchase them using AgriCoin tokens.
 
-## 🎥 Live Demo
+### 🎥 Live Demo
 
 <div align="center">
 
